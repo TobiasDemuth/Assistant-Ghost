@@ -7,6 +7,6 @@ first of all!
 
 in cmd:
 
-	pip install SpeechRecognition pyttsx3 webbrowser pyautogui google googlesearch-python datetime pandas py-translate-tool
+	pip install SpeechRecognition pyttsx3 pyautogui google googlesearch-python datetime pandas
 
 ._.
