@@ -3,7 +3,7 @@ Assistent
 
 Python version: 3.11.7
 
-first of all!:
+first of all!
 
 in cmd:
 
