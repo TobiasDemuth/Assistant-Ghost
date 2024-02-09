@@ -157,9 +157,9 @@ def add_app_path_gui(app_paths):
     if app_name and app_path:
         app_paths[app_name] = app_path
         write_app_paths(app_paths)
-        response = f"App-Pfad für {app_name} wurde hinzugefügt."
+        response = f"app-path for {app_name} were added."
     else:
-        response = "Fehler beim Hinzufügen des App-Pfads."
+        response = "error while adding path."
 
     return response
 
@@ -188,11 +188,13 @@ def personal_assistant():
                 if app_query in app_paths:
                     subprocess.run(str(app_paths[app_query]))
                 else:
-                    response = f"Die App '{app_query}' wurde nicht gefunden. Möchten Sie den Pfad hinzufügen?"
+                    response = f"'{app_query}' was not found. want to add the app?"
                     text_to_speech(response)
                     add_path_response = speech_to_text()
-                    if add_path_response and any(word in add_path_response.lower() for word in ["ja", "hinzufügen"]):
+                    if add_path_response and any(word in add_path_response.lower() for word in ["yes", "add"]):
                         response = add_app_path_gui(app_paths)
+                    else:
+                        response = "ok"
             
             if key in user_input.lower() and any(command in user_input.lower() for command in wdh_commands):
                 response = last_response
@@ -202,24 +204,24 @@ def personal_assistant():
                 math_query = "".join([word if word not in math_commands else "" for word in math_query.split(" ")])
                 response = eval(math_query)
 
-            if key in user_input.lower() and "wie spät" in user_input.lower():
+            if key in user_input.lower() and "time" in user_input.lower():
                 response = get_current_time()
 
-            if key in user_input.lower() and "gebe ein" in user_input.lower():
-                response = "Eingabetext sagen"
+            if key in user_input.lower() and "enter text" in user_input.lower():
+                response = "ok go on"
                 text_to_speech(response)
                 input_text = speech_to_text()
                 if input_text:
                     type_text(input_text)
 
             if key in user_input.lower() and any(command in user_input.lower() for command in open_commands):
-                open_query = user_input.lower().replace(key, "").replace("nach", "").strip()
+                open_query = user_input.lower().replace(key, "").strip()
                 open_query = "".join([word if word not in open_commands else "" for word in open_query.split(" ")])
                 if open_query:
-                    response = f"Ich öffne {open_query} für Sie."
+                    response = f"{open_query} is beeing opened."
                     open_first_google_result(open_query)
                 else:
-                    response = "Entschuldigung, ich habe keine Suchanfrage verstanden."
+                    response = "sorry i didnt understand the request."
 
             if key in user_input.lower() and any(command in user_input.lower() for command in search_commands):
                 search_query = user_input.lower().replace(key, "").strip()
@@ -227,7 +229,7 @@ def personal_assistant():
                 webbrowser.open(f"https://www.google.com/search?q={search_query}")
 
             if key in user_input.lower() and any(command in user_input.lower() for command in note_commands):
-                if "note" in user_input.lower() or "schreibe auf" in user_input.lower():
+                if "note" in user_input.lower():
                     response = "please enter your note."
                     text_to_speech(response)
                     note_text = speech_to_text()
