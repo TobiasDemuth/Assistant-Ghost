@@ -23,7 +23,7 @@ trans_commands = ["übersetze"]
 
 app_file = "app_paths.txt"
 
-def speech_to_text(language="de-DE"):
+def speech_to_text(language="en-EN"):
     recognizer = sr.Recognizer()
 
     with sr.Microphone() as source:
@@ -46,7 +46,7 @@ def text_to_speech(response):
     engine.runAndWait()
 
 def offline_translate(text, target_language):
-    translator= Translator(from_lang= "de",to_lang=target_language)
+    translator= Translator(from_lang= "en",to_lang=target_language)
     translation = translator.translate(text)
     return translation
 
@@ -175,8 +175,11 @@ def personal_assistant():
             if key in user_input.lower() and any(command in user_input.lower() for command in trans_commands):
                 trans_query = user_input.lower().replace(key, "").strip()
                 trans_query = " ".join([word if word not in trans_commands else "" for word in trans_query.split(" ")])
-                print(offline_translate(trans_query,"en"))
-                response = offline_translate(trans_query,"en")
+                trans_query = trans_query.split(" ")
+                input_lang = trans_query[-1]
+                trans_query = " ".join(trans_query[0:-2])
+                print(offline_translate(trans_query,input_lang))
+                response = offline_translate(trans_query,input_lang)
             
             if key in user_input.lower() and any(command in user_input.lower() for command in app_commands):
                 response = user_input.lower()
