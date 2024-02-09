@@ -13,13 +13,13 @@ from tkinter import simpledialog
 from translate import Translator
 
 key = ""
-search_commands = ["suche", "suchen", "such", "search"]
-open_commands = ["öffne", "öffnen", "open"]
-math_commands = ["berechne"]
-wdh_commands = ["wiederhole", "nochmal", "wie bitte"]
-note_commands = ["notizen", "notiere", "schreibe auf"]
-app_commands = ["starte"]
-trans_commands = ["übersetze"]
+search_commands = ["search"]
+open_commands = ["open"]
+math_commands = ["calculate"]
+wdh_commands = ["repeat"]
+note_commands = ["note"]
+app_commands = ["start"]
+trans_commands = ["translate"]
 
 app_file = "app_paths.txt"
 
@@ -31,12 +31,12 @@ def speech_to_text(language="en-EN"):
 
     try:
         text = recognizer.recognize_google(audio, language=language)
-        print("Sie haben gesagt:", text)
+        print("you said:", text)
         return text
     except sr.UnknownValueError:
         return None
     except sr.RequestError as e:
-        print(f"Konnte keine Ergebnisse von der Google Web Speech API abrufen; {e}")
+        print(f"no result with google API; {e}")
         return None
 
 def text_to_speech(response):
@@ -64,18 +64,18 @@ def open_first_google_result(query):
         if first_link:
             webbrowser.open(first_link)
         else:
-            print("Kein geeigneter Link im ersten Suchergebnis gefunden.")
+            print("No link found")
     except Exception as e:
-        print(f"Fehler beim Abrufen der Suchergebnisse: {e}")
+        print(f"Error: {e}")
 
 def get_current_time():
     current_time = datetime.now().strftime("%H:%M:%S")
     current_time = current_time.split(":")
-    return f"{current_time[0]} Uhr {current_time[1]}"
+    return f"{current_time[0]} : {current_time[1]}"
 
 def write_note_to_csv(note):
-    csv_file = "notizen.csv"
-    fieldnames = ["Zeitpunkt", "Notiz"]
+    csv_file = "notes.csv"
+    fieldnames = ["Date", "Note"]
     
     if not os.path.exists(csv_file):
         with open(csv_file, 'w', newline='', encoding='utf-8') as file:
@@ -84,53 +84,53 @@ def write_note_to_csv(note):
 
     with open(csv_file, 'a', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writerow({"Zeitpunkt": get_current_time(), "Notiz": note})
+        writer.writerow({"Date": get_current_time(), "Note": note})
 
 def read_notes_from_csv():
-    csv_file = "notizen.csv"
-    fieldnames = ["Zeitpunkt", "Notiz"]
+    csv_file = "notes.csv"
+    fieldnames = ["Date", "Note"]
     
     if os.path.exists(csv_file):
         df = pd.read_csv(csv_file)
         return df
     else:
-        return "Keine Notizen gefunden."
+        return "Mo note found."
 
 def read_notes_with_keyword_from_csv(keyword):
-    csv_file = "notizen.csv"
-    fieldnames = ["Zeitpunkt", "Notiz"]
+    csv_file = "notes.csv"
+    fieldnames = ["Date", "Note"]
     
     if os.path.exists(csv_file):
         df = pd.read_csv(csv_file)
 
-        matching_notes = df[df['Notiz'].str.lower().str.contains(keyword.lower())]
+        matching_notes = df[df['Note'].str.lower().str.contains(keyword.lower())]
 
         if not matching_notes.empty:
-            return f"Notizen mit dem Schlüsselwort '{keyword}':\n" + matching_notes.to_string(index=False)
+            return f"Notes with keyword '{keyword}':\n" + matching_notes.to_string(index=False)
         else:
-            return f"Keine Notizen mit dem Schlüsselwort '{keyword}' gefunden."
+            return f"Found no notes with '{keyword}'."
     else:
-        return "Keine Notizen gefunden."
+        return "No notes found."
 
 def delete_notes_with_keyword_from_csv(keyword):
-    csv_file = "notizen.csv"
-    fieldnames = ["Zeitpunkt", "Notiz"]
+    csv_file = "notes.csv"
+    fieldnames = ["Date", "Note"]
     
     if os.path.exists(csv_file):
         df = pd.read_csv(csv_file)
 
-        matching_notes = df[df['Notiz'].str.lower().str.contains(keyword.lower())]
+        matching_notes = df[df['Note'].str.lower().str.contains(keyword.lower())]
 
         if not matching_notes.empty:
             # Schreibe die verbleibenden Notizen (ohne die mit dem Schlüsselwort) zurück in die Datei
-            df = df[~df['Notiz'].str.lower().str.contains(keyword.lower())]
+            df = df[~df['Note'].str.lower().str.contains(keyword.lower())]
             df.to_csv(csv_file, index=False, encoding='utf-8')
             
-            return f"{len(matching_notes)} Notizen mit dem Schlüsselwort '{keyword}' wurden gelöscht."
+            return f"{len(matching_notes)} notes with keyword '{keyword}' were deleted."
         else:
-            return f"Keine Notizen mit dem Schlüsselwort '{keyword}' gefunden."
+            return f"found no note with the keyword '{keyword}'."
     else:
-        return "Keine Notizen gefunden."
+        return "no note found."
 
 def read_app_paths():
     app_paths = {}
@@ -151,8 +151,8 @@ def write_app_paths(app_paths):
 def add_app_path_gui(app_paths):
     root = tk.Tk()
 
-    app_name = simpledialog.askstring("App-Pfad hinzufügen", "Namen der App eingeben:")
-    app_path = simpledialog.askstring("App-Pfad hinzufügen", "Pfad zur App eingeben:")
+    app_name = simpledialog.askstring("add app-name", "enter app-name:")
+    app_path = simpledialog.askstring("add app-path", "enter app-path:")
 
     if app_name and app_path:
         app_paths[app_name] = app_path
@@ -227,48 +227,46 @@ def personal_assistant():
                 webbrowser.open(f"https://www.google.com/search?q={search_query}")
 
             if key in user_input.lower() and any(command in user_input.lower() for command in note_commands):
-                if "notiere" in user_input.lower() or "schreibe auf" in user_input.lower():
-                    response = "Bitte sagen Sie die Notiz, die Sie speichern möchten."
+                if "note" in user_input.lower() or "schreibe auf" in user_input.lower():
+                    response = "please enter your note."
                     text_to_speech(response)
                     note_text = speech_to_text()
                     if note_text:
                         write_note_to_csv(note_text)
-                        response = "Notiz wurde gespeichert."
-                elif "lies notizen" in user_input.lower():
+                        response = "note saved."
+                elif "read note" in user_input.lower():
                     notes = read_notes_from_csv()
                     if isinstance(notes, pd.DataFrame):
                         print(notes)
-                        response = "Hier sind Ihre Notizen:\n" + notes.to_string(index=False)
+                        response = "notes:\n" + notes.to_string(index=False)
                     else:
                         response = notes
-                if key in user_input.lower() and "lösche notizen" in user_input.lower():
-                    response = "Welche Notizen möchten Sie löschen? Sagen Sie das Schlüsselwort."
+                if key in user_input.lower() and "delete note" in user_input.lower():
+                    response = "please enter keyword."
                     text_to_speech(response)
                     keyword = speech_to_text()
                     if keyword:
-                        text_to_speech(
-                            delete_notes_with_keyword_from_csv(keyword) + ".  wirklich löschen?",
-                        )
+                        text_to_speech(delete_notes_with_keyword_from_csv(keyword) + ". deleted",)
 
-            elif key in user_input.lower() and "hallo" in user_input.lower():
-                response = "Hallo!"
+            elif key in user_input.lower() and "hello" in user_input.lower():
+                response = "hello!"
 
-            elif key in user_input.lower() and "auf wiedersehen" in user_input.lower():
-                text_to_speech("Auf Wiedersehen! Haben Sie einen schönen Tag.")
-                with open("gespräch.txt", "a") as file:
+            elif key in user_input.lower() and "good bye" in user_input.lower():
+                text_to_speech("good bye!.")
+                with open("conversation.txt", "a") as file:
                     file.write("-----------------------------------------------------------------------------")
                 break
 
             elif key in user_input.lower() and "name" in user_input.lower():
-                response = "geheim"
+                response = "ghost"
 
-            elif key in user_input.lower() and "danke" in user_input.lower():
-                response = "Gern geschehen!"
+            elif key in user_input.lower() and "thanks" in user_input.lower():
+                response = "no problem!"
 
         text_to_speech(response)
         if response:
             last_response = response
-        with open("gespräch.txt", "a") as file:
+        with open("conversation.txt", "a") as file:
             full_time = datetime.now().strftime("%H:%M:%S")
             if user_input:
                 file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
