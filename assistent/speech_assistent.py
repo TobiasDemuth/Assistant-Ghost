@@ -98,7 +98,7 @@ def read_notes_from_csv():
         df = pd.read_csv(csv_file)
         return df
     else:
-        return "Mo note found."
+        return "No note found."
 
 def read_notes_with_keyword_from_csv(keyword):
     csv_file = "notes.csv"
