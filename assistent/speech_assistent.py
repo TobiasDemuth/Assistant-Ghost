@@ -49,7 +49,7 @@ def text_to_speech(response):
     engine.runAndWait()
 
 def offline_translate(text, target_language):
-    translator= Translator(to_lang=target_language)
+    translator = Translator(to_lang=target_language)
     translation = translator.translate(text)
     return translation
 
@@ -179,14 +179,12 @@ def personal_assistant():
                 trans_query = user_input.lower().replace(key, "").strip()
                 trans_query = " ".join([word if word not in trans_commands else "" for word in trans_query.split(" ")])
                 trans_query = trans_query.split(" ")
-                if trans_query[-1] in trans_dict:
-                    input_lang = trans_dict[trans_query[-1].lower()]
-                    trans_query = " ".join(trans_query[0:-2])
-                    print(offline_translate(trans_query,input_lang))
-                    response = offline_translate(trans_query,input_lang)
-                else:
-                    response = "could not understand destination language"
-                      
+                input_lang = trans_dict[trans_query[-1].lower()]
+                text = str(" ".join(trans_query[0:-2]).strip())
+                translation = offline_translate(text,input_lang)
+                print(translation)
+                response = translation
+            
             if key in user_input.lower() and any(command in user_input.lower() for command in app_commands):
                 response = user_input.lower()
                 app_query = user_input.lower().replace(key, "").strip()
