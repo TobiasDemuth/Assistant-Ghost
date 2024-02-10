@@ -45,6 +45,7 @@ def speech_to_text(language="en-EN"):
 def text_to_speech(response):
     engine = pyttsx3.init()
     engine.setProperty('rate', 200)  # Ändern Sie die Sprechgeschwindigkeit nach Bedarf
+    engine.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0')
     engine.say(response)
     engine.runAndWait()
 
