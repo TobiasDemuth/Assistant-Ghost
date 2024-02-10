@@ -21,7 +21,13 @@ note_commands = ["note"]
 app_commands = ["start"]
 trans_commands = ["translate"]
 trans_dict = {
-                "german" : "de"
+                "german" : "de",
+                "france" : "fr",
+                "spain" : "es",
+                "italian" : "it",
+                "chinese" : "zh",
+                "japanese" : "ja",
+                "russian" : "ru"
             }
 
 app_file = "app_paths.txt"
