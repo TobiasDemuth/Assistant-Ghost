@@ -1,0 +1,9 @@
+SpeechRecognition
+pyttsx3
+pyautogui
+google
+googlesearch-python
+datetime
+pandas
+translate
+wikipedia
