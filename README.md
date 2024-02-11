@@ -5,7 +5,7 @@ Python version: 3.11.7
 
 first of all!
 download requirements.txt
-in cmd:
+and in cmd:
 
 	pip install -r requirements.txt
 
