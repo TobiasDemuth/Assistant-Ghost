@@ -20,6 +20,8 @@ wdh_commands = ["repeat"]
 note_commands = ["note"]
 app_commands = ["start"]
 trans_commands = ["translate"]
+zoom_commands = ["zoom","scale"]
+
 trans_dict = {
                 "german" : "de",
                 "france" : "fr",
@@ -173,6 +175,12 @@ def add_app_path_gui(app_paths):
 
     return response
 
+def zoom_scale(user_input):
+    if user_input in ["in","up"]:
+        return pyautogui.hotkey('ctrl', '+')
+    if user_input in ["out","down"]:
+        return pyautogui.hotkey('ctrl', '-')
+
 def personal_assistant():
     last_response = ""
     app_paths = read_app_paths()
@@ -181,6 +189,12 @@ def personal_assistant():
         response = ""
 
         if user_input:
+            
+            if key in user_input.lower() and any(command in user_input.lower() for command in zoom_commands):
+                zoom_query = user_input.lower().replace(key, "").strip()
+                zoom_query = " ".join([word if word not in zoom_commands else "" for word in zoom_query.split(" ")]).strip()
+                print(zoom_query)
+                zoom_scale(zoom_query)
             
             if key in user_input.lower() and any(command in user_input.lower() for command in trans_commands):
                 trans_query = user_input.lower().replace(key, "").strip()
@@ -264,7 +278,7 @@ def personal_assistant():
             elif key in user_input.lower() and "hello" in user_input.lower():
                 response = "hello!"
 
-            elif key in user_input.lower() and "good bye" in user_input.lower():
+            elif key in user_input.lower() and "goodbye" in user_input.lower():
                 text_to_speech("good bye!.")
                 with open("conversation.txt", "a") as file:
                     file.write("-----------------------------------------------------------------------------")
@@ -285,6 +299,6 @@ def personal_assistant():
                 file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
         if datetime.now().strftime("%M") == "00" and datetime.now().strftime("%S") == "00" :
             file.write("-----------------------------------------------------------------------------")
-            
+                     
 if __name__ == "__main__":
     personal_assistant()
