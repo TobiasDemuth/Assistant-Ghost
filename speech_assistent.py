@@ -12,7 +12,13 @@ import tkinter as tk
 from tkinter import simpledialog
 from translate import Translator
 
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+
 key = ""
+
+# commands
 search_commands = ["search"]
 open_commands = ["open"]
 math_commands = ["calculate"]
@@ -22,6 +28,7 @@ app_commands = ["start"]
 trans_commands = ["translate"]
 zoom_commands = ["zoom","scale"]
 
+# dictionarys
 trans_dict = {
                 "german" : "de",
                 "france" : "fr",
@@ -32,9 +39,14 @@ trans_dict = {
                 "russian" : "ru"
             }
 
+# file names
 app_file = "app_paths.txt"
 
-def speech_to_text(language="en-EN"):
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+
+def speech_to_text(language="en-EN"): # can be changed later also through code
     recognizer = sr.Recognizer()
 
     with sr.Microphone() as source:
@@ -42,7 +54,7 @@ def speech_to_text(language="en-EN"):
 
     try:
         text = recognizer.recognize_google(audio, language=language)
-        print("you said:", text)
+        print("you said:", text) # just for debugging
         return text
     except sr.UnknownValueError:
         return None
@@ -52,8 +64,8 @@ def speech_to_text(language="en-EN"):
 
 def text_to_speech(response):
     engine = pyttsx3.init()
-    engine.setProperty('rate', 200)  # Ändern Sie die Sprechgeschwindigkeit nach Bedarf
-    engine.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0')
+    engine.setProperty('rate', 200)  # speaking speach
+    engine.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0') # windows standart voice
     engine.say(response)
     engine.runAndWait()
 
@@ -67,10 +79,10 @@ def type_text(text):
 
 def open_first_google_result(query):
     try:
-        # Verwenden Sie die googlesearch-python-Bibliothek, um die ersten Suchergebnisse zu erhalten
+        # get first google-search link
         search_results = search(query, num_results=1)
 
-        # Extrahieren Sie den ersten Link aus den Suchergebnissen
+        # extracting
         first_link = next(search_results, None)
 
         if first_link:
@@ -134,7 +146,7 @@ def delete_notes_with_keyword_from_csv(keyword):
         matching_notes = df[df['Note'].str.lower().str.contains(keyword.lower())]
 
         if not matching_notes.empty:
-            # Schreibe die verbleibenden Notizen (ohne die mit dem Schlüsselwort) zurück in die Datei
+            # reentering not keyword matching notes
             df = df[~df['Note'].str.lower().str.contains(keyword.lower())]
             df.to_csv(csv_file, index=False, encoding='utf-8')
             
@@ -180,6 +192,10 @@ def zoom_scale(user_input):
         return pyautogui.hotkey('ctrl', '+')
     if user_input in ["out","down"]:
         return pyautogui.hotkey('ctrl', '-')
+
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 def personal_assistant():
     last_response = ""
@@ -299,6 +315,8 @@ def personal_assistant():
                 file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
         if datetime.now().strftime("%M") == "00" and datetime.now().strftime("%S") == "00" :
             file.write("-----------------------------------------------------------------------------")
-                     
+
+
+
 if __name__ == "__main__":
     personal_assistant()
