@@ -11,6 +11,7 @@ import subprocess
 import tkinter as tk
 from tkinter import simpledialog
 from translate import Translator
+import wikipedia
 
 key = ""
 search_commands = ["search"]
@@ -21,6 +22,7 @@ note_commands = ["note"]
 app_commands = ["start"]
 trans_commands = ["translate"]
 zoom_commands = ["zoom","scale"]
+wikipedia_commands = ["wikipedia"]
 
 trans_dict = {
                 "german" : "de",
@@ -181,6 +183,10 @@ def zoom_scale(user_input):
     if user_input in ["out","down"]:
         return pyautogui.hotkey('ctrl', '-')
 
+def get_wikipedia(user_input):
+    result = wikipedia.summary(user_input,1)
+    return result
+
 def personal_assistant():
     last_response = ""
     app_paths = read_app_paths()
@@ -205,7 +211,18 @@ def personal_assistant():
                 translation = offline_translate(text,input_lang)
                 print(translation)
                 response = translation
-            
+                
+            if key in user_input.lower() and any(command in user_input.lower() for command in wikipedia_commands):
+                search_query = user_input.lower().replace(key, "").strip()
+                response = get_wikipedia(search_query)
+                with open("conversation.txt", "a") as file:
+                    full_time = datetime.now().strftime("%H:%M:%S")
+                    if user_input:
+                        file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
+                if datetime.now().strftime("%M") == "00" and datetime.now().strftime("%S") == "00" :
+                    file.write("-----------------------------------------------------------------------------")
+ 
+                            
             if key in user_input.lower() and any(command in user_input.lower() for command in app_commands):
                 response = user_input.lower()
                 app_query = user_input.lower().replace(key, "").strip()
