@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://github.com/TobiasDemuth/Assistent-Ghost/assets/150724275/52725fad-2fdc-4bfc-916f-505ed3f59c32">
-        <img src="https://github.com/TobiasDemuth/Assistent-Ghost/assets/150724275/52725fad-2fdc-4bfc-916f-505ed3f59c32" alt="Assistant-ghost white 512">
+        <img src="https://github.com/TobiasDemuth/Assistant-Ghost/blob/main/Logo/Logo_PNG/Assistant-ghost%20white%20256.png" alt="Assistant-ghost white 512">
     </a>
 </div>
 <div align="center">
