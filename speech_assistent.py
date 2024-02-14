@@ -80,7 +80,7 @@ def type_text(text):
 def open_first_google_result(query):
     try:
         # get first google-search link
-        search_results = search(query, num_results=1)
+        search_results = search(query, num=1,stop=1)
 
         # extracting
         first_link = next(search_results, None)
