@@ -229,15 +229,9 @@ def personal_assistant():
                 
             if key in user_input.lower() and any(command in user_input.lower() for command in wikipedia_commands):
                 search_query = user_input.lower().replace(key, "").strip()
+                search_query = "".join([word if word not in wikipedia_comamnds else "" for word in search_query.split(" ")])
                 response = get_wikipedia(search_query)
-                with open("conversation.txt", "a") as file:
-                    full_time = datetime.now().strftime("%H:%M:%S")
-                    if user_input:
-                        file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
-                if datetime.now().strftime("%M") == "00" and datetime.now().strftime("%S") == "00" :
-                    file.write("-----------------------------------------------------------------------------")
- 
-                            
+
             if key in user_input.lower() and any(command in user_input.lower() for command in app_commands):
                 response = user_input.lower()
                 app_query = user_input.lower().replace(key, "").strip()
