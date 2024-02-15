@@ -309,7 +309,7 @@ def personal_assistant():
         text_to_speech(response)
         if response:
             last_response = response
-        with open("conversation.txt", "a") as file:
+        with open("conversation.txt", "a", encoding="utf-8") as file:
             full_time = datetime.now().strftime("%H:%M:%S")
             if user_input:
                 file.write(f"{full_time} \t || \t {user_input} \t => \t {response}\n")
