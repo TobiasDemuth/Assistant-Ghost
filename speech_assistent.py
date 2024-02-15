@@ -195,8 +195,8 @@ def zoom_scale(user_input):
     if user_input in ["out","down"]:
         return pyautogui.hotkey('ctrl', '-')
 
-def get_ia(user_input):
-    result = ia.summary(user_input,1)
+def get_wikipedia(user_input):
+    result = wikipedia.summary(user_input,1)
     return result
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
@@ -227,7 +227,7 @@ def personal_assistant():
                 print(translation)
                 response = translation
                 
-            if key in user_input.lower() and any(command in user_input.lower() for command in ia_commands):
+            if key in user_input.lower() and any(command in user_input.lower() for command in wikipedia_commands):
                 search_query = user_input.lower().replace(key, "").strip()
                 search_query = "".join([word if word not in wikipedia_commands else "" for word in search_query.split(" ")])
                 response = get_wikipedia(search_query)
