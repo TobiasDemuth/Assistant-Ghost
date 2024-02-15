@@ -11,6 +11,7 @@ import subprocess
 import tkinter as tk
 from tkinter import simpledialog
 from translate import Translator
+import wikipedia
 
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
@@ -27,6 +28,7 @@ note_commands = ["note"]
 app_commands = ["start"]
 trans_commands = ["translate"]
 zoom_commands = ["zoom","scale"]
+wikipedia_commands = ["wikipedia"]
 
 # dictionarys
 trans_dict = {
@@ -193,6 +195,9 @@ def zoom_scale(user_input):
     if user_input in ["out","down"]:
         return pyautogui.hotkey('ctrl', '-')
 
+def get_wikipedia(user_input):
+    result = wikipedia.summary(user_input,1)
+    return result
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------
@@ -221,7 +226,12 @@ def personal_assistant():
                 translation = offline_translate(text,input_lang)
                 print(translation)
                 response = translation
-            
+                
+            if key in user_input.lower() and any(command in user_input.lower() for command in wikipedia_commands):
+                search_query = user_input.lower().replace(key, "").strip()
+                search_query = "".join([word if word not in wikipedia_comamnds else "" for word in search_query.split(" ")])
+                response = get_wikipedia(search_query)
+
             if key in user_input.lower() and any(command in user_input.lower() for command in app_commands):
                 response = user_input.lower()
                 app_query = user_input.lower().replace(key, "").strip()
